@@ -2,7 +2,7 @@
 SIT Programming Project Group LAB-P14-5
 
 Group Members:
-Nasyirah Binte Mohd Shariff (2503665)
+Nasyirah Binte Mohd Shariff (2503665)\n
 Siew Wee Kiam Eugene (2502012)
 Del Carmen Cyrus Aldwin Haboc (2501172)
 Lim Jun Wei (2501117)
