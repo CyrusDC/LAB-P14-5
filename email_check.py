@@ -1,3 +1,6 @@
+
+
+
 def email_check():
     email = input("Enter your email address: ")
     if "@" in email and "." in email:
