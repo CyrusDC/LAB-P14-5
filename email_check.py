@@ -1,10 +1,14 @@
+import pandas as pd
 
 
-
-def email_check():
-    email = input("Enter your email address: ")
+def valid_check(email):
     if "@" in email and "." in email:
-        print("Valid email address.")
+        return True
     else:
-        print("Invalid email address. Please try again.")
-        email_check()  # Recursively call the function until a valid email is entered
+        return False # Recursively call the function until a valid email is entered
+
+def read_csv():
+    csvFile = pd.read_csv('dataset/CEAS_08.csv')
+    print(csvFile)
+
+read_csv()

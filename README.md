@@ -1,4 +1,4 @@
-# CATCHPHISING
+# CATCHPHISHING
 SIT Programming Project Group LAB-P14-5
 
 Group Members:\

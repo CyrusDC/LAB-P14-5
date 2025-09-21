@@ -1,0 +1,47 @@
+/* body {
+    font-family: Arial, sans-serif;
+    background-color: white;
+    color: #333;
+    text-align: center;
+    padding-top: 50px;
+    font-size: 40px;
+} */
+
+body {
+  margin: 0;
+  padding: 0;
+}
+
+h1 {
+    text-align: center;
+    font-family: Arial, sans-serif;
+    font-size: 80px;
+    color: #007bff;
+}
+
+header {
+  background-color: #f1f1f1;
+  text-align: center;
+  padding: 10px;
+}
+
+.grid-container {
+  display: grid;
+  text-align: center;
+}
+
+.input_email {
+    text-align: center;
+    font-family: Arial, sans-serif;
+    font-size: 30px;
+    color: black; 
+}
+
+.email_box {
+    text-align: center;
+    font-size: 20px;
+}
+
+.submit_button {
+    font-size: 20px;
+}
