@@ -65,6 +65,7 @@ header {
 #message {
   text-align: left;
   padding-top: 10px;
+  padding-left: 10px;
   resize: none;
   margin-top: 10px;
   margin-bottom: 10px;

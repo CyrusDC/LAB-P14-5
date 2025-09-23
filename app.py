@@ -20,6 +20,9 @@ def check():
         return '<h1>Welcome!!!</h1>'
     else:
         return '<h1>invalid credentials!</h1>'
-
+def subject_check():
+    user = request.form['email_subject']
+def content_check():
+    user = request.form['message']
 if __name__ == '__main__':
     app.run(debug=True)     
