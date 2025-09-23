@@ -28,20 +28,44 @@ header {
 .grid-container {
   display: grid;
   text-align: center;
+  padding: 40px;
 }
 
 .input_email {
     text-align: center;
     font-family: Arial, sans-serif;
-    font-size: 30px;
+    font-size: 25px;
     color: black; 
 }
 
-.email_box {
+#email_box {
     text-align: center;
     font-size: 20px;
+    width: 500px;
+    margin-top: 10px;
+    margin-bottom: 10px;
 }
 
-.submit_button {
+
+#email_subject{
+    text-align: center;
     font-size: 20px;
+    width: 500px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+
+.submit_button {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    font-size: 25px;
+}
+
+#message {
+  text-align: left;
+  padding-top: 10px;
+  resize: none;
+  margin-top: 10px;
+  margin-bottom: 10px;
 }

@@ -13,8 +13,12 @@
     <div class="grid-container">
         <div class="input_email">
             <form name="email_address" action = "http://localhost:5000/Email" method = "POST">
-                <p>Enter Email Address:</p>
-                <input type = "email" class="email_box" name = "email_input">
+                <label for="email_box">Email Address:<br></label>
+                <input type = "email" id="email_box" name = "email_input"><br>
+                <label for="email_subject">Email Subject:</label><br>
+                <input type = "text" id="email_subject" name = "email_subject"><br>
+                <label for="message">Email Content:</label><br>
+                <textarea name="message" id="message" rows="20" cols="100" placeholder="Enter your email content here...."></textarea><br>
                 <input type = "submit" class="submit_button" value = "submit">
             </form>
         </div>
