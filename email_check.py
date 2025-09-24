@@ -1,5 +1,15 @@
 import csv
 import re
+import sys
+
+maxInt = sys.maxsize
+
+while True:
+    try:
+        csv.field_size_limit(maxInt)
+        break
+    except OverflowError:
+        maxInt = int(maxInt/10)
 
 DATASET_PATH = 'dataset/CEAS_08.csv'
 
@@ -85,12 +95,13 @@ def main():
             likelihood = 'Medium'
         else:
             likelihood = 'Low'
-        results.append({'id': email.get('id', ''), 'Likelihood': likelihood})
+        # results.append({'id': email.get('id', ''), 'Likelihood': likelihood})
+        results.append({'id': email.get('sender', ''), 'Likelihood': likelihood})
     #Print summary
     print(f'Total emails: {len(results)}')
     print('Phishing likelihood scores:')
     for r in results:
-        print(f"Email ID: {r['id']}, Likelihood: {r['Likelihood]}")']}")
+        print(f"Email ID: {r['id']}, Likelihood: {r['Likelihood']}")
 
 if __name__ == '__main__':
     main()
