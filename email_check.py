@@ -26,9 +26,17 @@ def phishing_score(email):
     suspicious_keywords = ['urgent', 'verify', 'account', 'password', 'login', 'click', 'update', 'security',
         'win', 'free', 'gift', 'prize', 'limited', 'offer', 'claim', 'alert', 'confirm', 'suspend',
         'locked', 'unusual', 'activity', 'refund', 'payment', 'invoice', 'bank', 'reset', 'important',
-        'attention', 'immediately', 'action required', 'click here', 'credentials']
+        'attention', 'immediately', 'action required', 'click here', 'credentials', 'download', 'Browser',
+        'Edge', 'Chrome', 'Firefox','.dll', 'Crypt', 'Encry', 'Key', 'Passw', 'username', 'Login','Credential',
+        'load', 'Rundll', 'Sql', 'select', 'Run', '.cmd','encode', 'base64', 'Powershell', 'mine', 'game',
+        'hack', 'clipboard', 'GetAsyncKeyState', 'mouse', 'hook', 'bypass', 'monitor', 'Firewall','ransom',
+        'payload', 'HKEY', 'VMcheck', 'Virus', 'DOS', 'task', 'rat','ftp', 'smtp', 'socket', 'connect',
+        'send', 'recv', 'autorun', 'startup','services.msc', 'svchost', 'regedit', 'regsvr32', 'vmware', 'vbox',
+        'qemu','xen', 'sandbox', 'ollydbg', 'windbg', 'ida', 'trojan', 'worm', 'backdoor','rootkit', 'keylogger',
+        'stealer', 'exploit', 'shellcode', 'xor', 'base64','createremotethread', 'virtualallocex', 'writeprocmemory',
+        'loadlibrary','getprocaddress', 'bitcoin', 'monero', 'ethereum', 'wallet', 'miner', 'pool','stratum', 'overwrite', 'killprocess']
     suspicious_domains = ['.ru', '.cn', '.tk', '.ml', '.biz', '.info', '.top', '.xyz', '.club', '.online', '.work',
-        '.cf', '.ga', '.gq', '.pw', '.cc', '.su', '.io', '.scam', '.phish']
+        '.cf', '.ga', '.gq', '.pw', '.cc', '.su', '.io', '.scam', '.phish', '.bat', '.vbs', '.js', '.ps1', '.hta', '.wsf', '.scr','.pif', '.pdb' ]
     points = 0
 
     # Rule 1: Add a point for every suspicious keyword detected
