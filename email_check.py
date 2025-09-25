@@ -36,7 +36,7 @@ def phishing_score(email):
         'stealer', 'exploit', 'shellcode', 'xor', 'base64','createremotethread', 'virtualallocex', 'writeprocmemory',
         'loadlibrary','getprocaddress', 'bitcoin', 'monero', 'ethereum', 'wallet', 'miner', 'pool','stratum', 'overwrite', 'killprocess']
     suspicious_domains = ['.ru', '.cn', '.tk', '.ml', '.biz', '.info', '.top', '.xyz', '.club', '.online', '.work',
-        '.cf', '.ga', '.gq', '.pw', '.cc', '.su', '.io', '.scam', '.phish', '.bat', '.vbs', '.js', '.ps1', '.hta', '.wsf', '.scr','.pif', '.pdb' ]
+        '.cf', '.ga', '.gq', '.pw', '.cc', '.su', '.io', '.scam', '.phish']
     points = 0
 
     # Rule 1: Add a point for every suspicious keyword detected
@@ -60,7 +60,7 @@ def phishing_score(email):
         points += 1
 
     # Rule 5: Risky attachment types
-    risky_extensions = ['.exe', '.zip', '.scr', '.js', '.bat', '.com', '.vbs', '.jar', '.msi']
+    risky_extensions = ['.exe', '.zip', '.scr', '.js', '.bat', '.com', '.vbs', '.jar', '.msi', '.ps1', '.hta', '.wsf', '.scr','.pif', '.pdb']
     attachments = email.get('attachments', '').lower()
     for ext in risky_extensions:
         if ext in attachments:
