@@ -8,16 +8,72 @@
 </head>
 <body>
     <header>
-        <h1>CATCHPHISHING</h1>
+        
     </header>
+    <style>
+    body {
+      margin: 0;
+      font-family: "MyHelvetica";
+      background: #ffeaa7;
+      color: #333;
+    }
+
+    header {
+    background: url("https://i.pinimg.com/1200x/3c/34/7f/3c347f15a196d40ad4129e0aa11c3e7c.jpg") left/cover;
+      color: black;
+      font: 13px ;
+      padding: 7rem;
+      text-align: center;
+    }
+
+	header h1 {
+      margin: 0;
+      font-size: 2.5rem;
+    }
+
+    
+
+    .hero {
+      padding: 2rem 2rem;
+      text-align: center;
+    }
+
+    .hero h2 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+
+    .hero p {
+      font-size: 1.2rem;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    footer {
+      background: #00b894;
+      color: white;
+      
+      text-align: center;
+      padding: 2rem;
+      margin-top: 30rem;
+    }
+  </style>
+  <div class="hero">
+  </div>
     <div class="grid-container">
         <div class="input_email">
+            <h2>Enter Email Address: </h2>
             <form name="email_address" action = "http://localhost:5000/Email" method = "POST">
-                <p>Enter Email Address:</p>
-                <input type = "email" class="email_box" name = "email_input">
+                <input type = "email" class="email_box" name = "email_input" style="padding: 0.75rem 1rem; font-size: 1rem; border: 2px solid; border-radius: 8px; width: 300px; max-width: 80%; justify-content:center; align-items:center;">
                 <input type = "submit" class="submit_button" value = "submit">
             </form>
         </div>
     </div>
+</body>
+</html>
+
+  <footer>
+    &copy; 2025 Lab-P14-5. All rights reserved.
+  </footer>
 </body>
 </html>

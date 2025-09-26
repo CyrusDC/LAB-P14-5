@@ -8,7 +8,7 @@ def valid_check(email):
         return False # Recursively call the function until a valid email is entered
 
 def read_csv():
-    csvFile = pd.read_csv('dataset/CEAS_08.csv')
+    csvFile = pd.read_csv('dataset\CEAS_08.csv')
     print(csvFile)
 
 read_csv()
