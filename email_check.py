@@ -69,6 +69,10 @@ def phishing_score(email):
 
     # Rule 6: Poor grammar or spelling mistakes (simple check)
     # This is a basic check for common mistakes
+    # grammar_mistakes = ['your account are', 'click here now', 'dear customer', 'dear user', 'recieve', 'securty', 'immediatly', 'informtion']
+    # for mistake in grammar_mistakes:
+    #     if mistake in body:
+    
     tool = language_tool_python.LanguageTool('en-US')
     mistakes = tool.check(body)
     for match in mistakes:
