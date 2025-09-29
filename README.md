@@ -1,5 +1,7 @@
 # CATCHPHISH
-SIT Programming Project Group LAB-P14-5
+SIT Programming Project\
+Module: INF1002\
+Group: LAB-P14-5
 
 Group Members:\
 Nasyirah Binte Mohd Shariff (2503665)\
