@@ -50,9 +50,27 @@ def phishing_score(email):
     if any(sender.endswith(domain) for domain in suspicious_domains):
         points += 1
 
-    # Rule 3: Simple check for links
-    if 'http' in body or 'www' in body:
-        points += 1
+    # Rule 3: URL analysis
+    url_shorteners = ['bit.ly', 'tinyurl.com', 'goo.gl', 't.co', 'ow.ly', 'is.gd', 'buff.ly', 'adf.ly', 'bit.do', 'cutt.ly', 'shorte.st']
+    url_pattern = re.compile(r'https?://[^\s]+')
+    urls = url_pattern.findall(body)
+    for url in urls:
+        # Check for URL shorteners
+        if any(short in url for short in url_shorteners):
+            points += 1
+        # Check for punycode/homograph attacks
+        if 'xn--' in url:
+            points += 1
+        # Check for suspicious subdomains (e.g., too many dots)
+        domain = re.sub(r'https?://', '', url).split('/')[0]
+        if domain.count('.') > 3:
+            points += 1
+        # Stub: Threat intelligence API/blacklist check (to be implemented)
+        # if is_blacklisted(url):
+        #     points += 2
+    if urls:
+        points += 1  # General point for having links
+
 
     # Rule 4: Mismatched sender and reply-to
     reply_to = email.get('reply-to', '').lower()
