@@ -115,6 +115,9 @@ except Exception:
 if VERBOSE:
     print('Started LanguageTool background initialization (non-blocking).')
 
+
+
+# Load dataset and return a dict
 def load_emails(dataset_path):
     emails = []
     with open(dataset_path, newline='', encoding='utf-8') as csvfile:
@@ -123,6 +126,8 @@ def load_emails(dataset_path):
             emails.append(row)
     return emails
 
+
+# function for email checks
 def phishing_score(email):
     suspicious_keywords = ['urgent', 'verify', 'account', 'password', 'login', 'click', 'update', 'security',
         'win', 'free', 'gift', 'prize', 'limited', 'offer', 'claim', 'alert', 'confirm', 'suspend',
@@ -236,7 +241,7 @@ def phishing_score(email):
 
     return points
 
-def main():
+def email_main():
     if VERBOSE:
         print(f'Loading emails from {DATASET_PATH}...')
     emails = load_emails(DATASET_PATH)
@@ -259,21 +264,9 @@ def main():
     for r in results:
         print(f"Email ID: {r['id']}, Likelihood: {r['Likelihood']}")
 
+
+
 if __name__ == '__main__':
-    main()
-
-#import pandas as pd
-
-#def valid_check(email):
-#    fake_emails = str(read_csv())
-#    if email in fake_emails:
-#        return False
-#    else:
-#        return True
-
-#def read_csv():
-#    csvFile = pd.read_csv('dataset/CEAS_08.csv')
-#    sender_dict = dict(csvFile['sender'])
-#    return sender_dict
+    email_main()
 
 
