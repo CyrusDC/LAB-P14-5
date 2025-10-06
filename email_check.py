@@ -1,7 +1,32 @@
 import csv
 import re
 import sys
-import language_tool_python
+import threading
+
+# Ensure stdout/stderr can handle Unicode on Windows consoles. This forces
+# a UTF-8 encoding with replacement for characters that can't be encoded
+# which prevents UnicodeEncodeError from crashing the script when printing
+# email headers that contain non-CP1252 characters.
+try:
+    # Python 3.7+ provides reconfigure
+    sys.stdout.reconfigure(encoding='utf-8', errors='replace')
+    sys.stderr.reconfigure(encoding='utf-8', errors='replace')
+except Exception:
+    # Fallback for other environments
+    try:
+        import io
+        sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
+        sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8', errors='replace')
+    except Exception:
+        # If even that fails, continue; prints may still error but we'll try.
+        pass
+
+# Toggle verbose debugging output
+VERBOSE = False
+
+# Defer importing language_tool_python until the background initializer runs
+# to avoid blocking module import if the package or Java is missing.
+language_tool_python = None
 
 maxInt = sys.maxsize
 
@@ -13,6 +38,82 @@ while True:
         maxInt = int(maxInt/10)
 
 DATASET_PATH = 'dataset/CEAS_08.csv'
+
+
+def init_language_tool(lang='en-US'):
+    """Initialize LanguageTool once. Returns tool or None if initialization fails.
+
+    Note: language_tool_python requires Java. If Java is not available this will
+    fail and return None so the rest of the script can continue with a simple
+    fallback check.
+    """
+    try:
+        tool = language_tool_python.LanguageTool(lang)
+        return tool
+    except Exception as e:
+        print(f"Warning: LanguageTool init failed: {e}")
+        return None
+
+
+def check_grammar_and_spelling(text, tool, max_chars=20000):
+    """Return a list of unique LanguageTool matches for the provided text.
+
+    - Truncates very long inputs for performance.
+    - Deduplicates overlapping matches by (offset, errorLength).
+    """
+    if not tool or not text:
+        return []
+    snippet = text[:max_chars]
+    matches = tool.check(snippet)
+    seen = set()
+    unique = []
+    for m in matches:
+        span = (m.offset, getattr(m, 'errorLength', 0))
+        if span not in seen:
+            seen.add(span)
+            unique.append(m)
+    return unique
+
+
+# Initialize the LanguageTool instance once in the background to avoid
+# blocking the main thread (language_tool_python may try to start Java).
+# TOOL will be set to a LanguageTool instance if initialization succeeds;
+# otherwise it will remain None and the code will fall back to the simple checks.
+TOOL = None
+_TOOL_READY = False
+
+def _init_tool_bg(lang='en-US'):
+    """Background initializer for LanguageTool. Runs in a daemon thread."""
+    global TOOL, _TOOL_READY
+    # Try to import language_tool_python here (in background) so the main
+    # thread isn't blocked by the import or by Java starting.
+    try:
+        import language_tool_python as _lt
+        globals()['language_tool_python'] = _lt
+    except Exception as e:
+        if VERBOSE:
+            print(f'language_tool_python import failed in background: {e}')
+        globals()['language_tool_python'] = None
+        _TOOL_READY = True
+        return
+    try:
+        TOOL = init_language_tool(lang)
+    except Exception as e:
+        if VERBOSE:
+            print(f'LanguageTool init failed in background: {e}')
+        TOOL = None
+    _TOOL_READY = True
+
+# Start background initialization but don't wait for it. This prevents the
+# script from hanging if LanguageTool/Java is unavailable or slow to start.
+try:
+    threading.Thread(target=_init_tool_bg, args=('en-US',), daemon=True).start()
+except Exception:
+    # If threading fails for any reason, fall back to no tool.
+    TOOL = None
+    _TOOL_READY = True
+if VERBOSE:
+    print('Started LanguageTool background initialization (non-blocking).')
 
 def load_emails(dataset_path):
     emails = []
@@ -90,12 +191,31 @@ def phishing_score(email):
     # grammar_mistakes = ['your account are', 'click here now', 'dear customer', 'dear user', 'recieve', 'securty', 'immediatly', 'informtion']
     # for mistake in grammar_mistakes:
     #     if mistake in body:
-    
-    tool = language_tool_python.LanguageTool('en-US')
-    mistakes = tool.check(body)
-    for match in mistakes:
-            print(f"Typo Error: {match.message}")
-            points += 1
+    # Use LanguageTool if available; otherwise fall back to a tiny hardcoded check
+    grammar_matches = []
+    if TOOL:
+        try:
+            grammar_matches = check_grammar_and_spelling(body, TOOL)
+        except Exception as e:
+            if VERBOSE:
+                print(f"LanguageTool check failed: {e}")
+            grammar_matches = []
+    else:
+        # Very small fallback heuristic for common misspellings/phrases
+        fallback_mistakes = ['recieve', 'securty', 'immediatly', 'informtion', 'click here now', 'your account are']
+        for fm in fallback_mistakes:
+            if fm in body:
+                grammar_matches.append(fm)
+
+    # Count (and optionally print) the grammar/spelling findings
+    for match in grammar_matches:
+        if VERBOSE:
+            # match may be a Match object or a simple string from fallback
+            if hasattr(match, 'message'):
+                print(f"Typo/Error: {match.message} -> {getattr(match, 'context', '')}")
+            else:
+                print(f"Typo/Error (fallback): {match}")
+        points += 1
 
     # Rule 7: Odd hours (simple check, if 'date' field exists)
     # Assume date is in format 'YYYY-MM-DD HH:MM:SS'
@@ -117,7 +237,11 @@ def phishing_score(email):
     return points
 
 def main():
+    if VERBOSE:
+        print(f'Loading emails from {DATASET_PATH}...')
     emails = load_emails(DATASET_PATH)
+    if VERBOSE:
+        print(f'Loaded {len(emails)} emails')
     results = []
     for email in emails:
         score = phishing_score(email)
