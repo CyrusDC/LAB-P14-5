@@ -7,51 +7,12 @@
     <link rel="stylesheet" href="{{url_for('static', filename='css/style.css')}}">
 </head>
 <body>
-  <header>
-
-  </header>
-    <style>
-    body {
-      margin: 0;
-      font-family: "MyHelvetica";
-      background: #ffeaa7;
-      color: #333;
-    }
-
-    /*header {
-    background: url("https://i.pinimg.com/1200x/3c/34/7f/3c347f15a196d40ad4129e0aa11c3e7c.jpg") left/cover;
-      color: black;
-      font: 13px ;
-      padding: 7rem;
-      text-align: center;
-    }*/
-
-	header h1 {
-      margin: 0;
-      font-size: 2.5rem;
-    }
-
-    .hero {
-      padding: 2rem 2rem;
-      text-align: center;
-    }
-
-
-    footer {
-      background: #00b894;
-      color: white;
-      
-      text-align: center;
-      padding: 2rem;
-      margin-top: 30rem;
-    }
-  </style>
-  <div class="hero">
+  <div class="header">
     <h1>CATCHPHISHING</h1>
-  </div>
+    </div>
     <div class="grid-container">
         <div class="input_email">
-            <h2>Enter Email Address: </h2>
+            <h2>Enter Email Details: </h2>
             <form name="email_address" action = "http://localhost:5000/Email" method = "POST">
                 <label for="email_box">Email Address:<br></label>
                 <input type = "email" id="email_box" name = "email_input"><br>
@@ -62,12 +23,15 @@
                 <input type = "submit" class="submit_button" value = "submit">
             </form>
         </div>
+        <div class="result">
+          <label for="result">Result:</label><br>
+          </div>
     </div>
 </body>
 </html>
 
-  <footer>
+  <div class="footer">
     &copy; 2025 Lab-P14-5. All rights reserved.
-  </footer>
+  </div>
 </body>
 </html>

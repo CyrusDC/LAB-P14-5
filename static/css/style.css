@@ -8,36 +8,43 @@
 } */
 
 body {
-  margin: 0;
-  font-family: "MyHelvetica";
+  padding:0;
+  margin:0;
   background: #ffeaa7;
   color: #333;
-  padding: 0;
 }
 
 h1 {
     text-align: center;
     font-family: Arial, sans-serif;
-    font-size: 80px;
-    color: #007bff;
+    font-size: 60px;
+    color: #ec9898;
 }
 
-header {
-  background-color: #f1f1f1;
+.header {
+  background-color: #325f50;
+  text-align: center;
+  padding: 5px;
+}
+
+.footer {
+  background-color: #325f50;
   text-align: center;
   padding: 10px;
+  color: white;
 }
 
 .grid-container {
   display: grid;
   text-align: center;
-  padding: 40px;
+  padding: 20px;
 }
 
 .input_email {
     text-align: center;
     font-family: Arial, sans-serif;
     font-size: 25px;
+    padding: 5px;
     color: black; 
 }
 
@@ -53,4 +60,12 @@ header {
 #email_subject{
     text-align: center;
     font-size: 20px;
+}
+
+.result{
+    font-family: "MyHelvetica";
+    padding-top: 20px;
+    text-align: center;
+    font-size: 30px;
+    color: red;
 }
