@@ -13,6 +13,7 @@ def index():
 
 @app.route('/Email', methods=['POST'])
 def check():
+    likelihood = ""
     user_email = request.form['email_input']
     user_subject = request.form['email_subject']
     user_message = request.form['message']
@@ -26,13 +27,14 @@ def check():
     score = user_check_email + user_check_message + user_check_subject
     if score >= 10:
         likelihood = 'High'
-        return '<h1>likelihood high</h1>'
+        user_email = user_email
+        return render_template("index.html", likelihood=likelihood, score=score, user_email=user_email, user_subject=user_subject, user_message=user_message)
     elif score > 2 and score <= 5:
         likelihood = 'Medium'
-        return '<h1>likelihood medium</h1>'
+        return render_template("index.html", likelihood=likelihood, score=score, user_email=user_email, user_subject=user_subject, user_message=user_message)
     else:
         likelihood = 'Low'
-        return '<h1>likelihood low</h1>'
+        return render_template("index.html", likelihood=likelihood, score=score, user_email=user_email, user_subject=user_subject, user_message=user_message)
 
 
 

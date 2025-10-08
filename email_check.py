@@ -22,7 +22,7 @@ except Exception:
         pass
 
 # Toggle verbose debugging output
-VERBOSE = True
+VERBOSE = False
 
 # Defer importing language_tool_python until the background initializer runs
 # to avoid blocking module import if the package or Java is missing.
