@@ -9,31 +9,28 @@
 <body>
   <div class="header">
     <h1>CATCHPHISHING</h1>
-    </div>
-    <div class="grid-container">
-        <div class="input_email">
-            <h2>Enter Email Details: </h2>
-            <form name="email_address" action = "http://localhost:5000/Email" method = "POST">
-                <label for="email_box">Email Address:<br></label>
-                <input type = "email" id="email_box" name = "email_input" value="{{ user_email }}" required><br>
-                <label for="email_subject">Email Subject:</label><br>
-                <input type = "text" id="email_subject" name = "email_subject" value="{{ user_subject }}"required><br>
-                <label for="message">Email Content:</label><br>
-                <textarea name="message" id="message" rows="20" cols="100" placeholder="Enter your email content here...." required>{{ user_message }}</textarea><br>
-                <input type = "submit" class="submit_button" value = "SUBMIT"><br>
-            </form>
-            <div>
-              <label for="result" class="result">Result:</label><br>
-              <label type="text" class="result">{{ likelihood }}</label>
-              <label type="text" class="result">{{ score }}</label>
-            </div>
-        </div>
-    </div>
-</body>
-</html>
-
-  <div class="footer">
-    &copy; 2025 Lab-P14-5. All rights reserved.
   </div>
+  <div class="grid-container">
+      <div class="input_email">
+        <h2>Enter Email Details: </h2>
+        <form name="email_address" action = "http://localhost:5000/Email" method = "POST">
+            <label for="email_box">Email Address:<br></label>
+            <input type = "email" id="email_box" name = "email_input" value="{{ user_email }}" required><br>
+            <label for="email_subject">Email Subject:</label><br>
+            <input type = "text" id="email_subject" name = "email_subject" value="{{ user_subject }}"required><br>
+            <label for="message">Email Content:</label><br>
+            <textarea name="message" id="message" rows="20" cols="100" placeholder="Enter your email content here...." required>{{ user_message }}</textarea><br>
+            <input type = "submit" class="submit_button" value = "SUBMIT"><br>
+        </form>
+        <div>
+          <label for="result" class="result">Result:</label><br>
+          <label type="text" class="result">{{ likelihood }}</label>
+          <label type="text" class="result">{{ score }}</label>
+        </div>
+      </div>
+  </div>
+  <footer class="footer">
+    <p>&copy; 2025 Lab-P14-5. All rights reserved.</p>
+  </footer>
 </body>
 </html>
