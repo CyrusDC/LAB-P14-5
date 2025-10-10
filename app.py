@@ -25,19 +25,20 @@ def check():
     user_check_subject = phishing_score(user_dict)
     user_check_message = phishing_score(user_dict)
     score = user_check_email + user_check_message + user_check_subject
-    max_score = 10
-    if score > max_score:
-        if score <= 2:
+    max_score = 100
+    if score < max_score:
+        if score <= 10:
             likelihood = 'Low'
             user_email = user_email
             return render_template("index.html", likelihood=likelihood, score=score, user_email=user_email, user_subject=user_subject, user_message=user_message)
-        elif score >= 3 and score <= 6:
+        elif score >= 11 and score <= 69:
             likelihood = 'Medium'
             return render_template("index.html", likelihood=likelihood, score=score, user_email=user_email, user_subject=user_subject, user_message=user_message)
         else:
             likelihood = 'High'
             return render_template("index.html", likelihood=likelihood, score=score, user_email=user_email, user_subject=user_subject, user_message=user_message)
     else:
+        score = max_score
         return render_template("index.html", likelihood=likelihood, score=score, user_email=user_email, user_subject=user_subject, user_message=user_message)
 
 

@@ -250,13 +250,13 @@ def email_main():
     results = []
     for email in emails:
         score = phishing_score(email)
-        if score <= 2:
-            likelihood = 'Low'
+        if score >= 10:
+            likelihood = 'High'
             # likelihood = 'High'
         elif score >= 3 and score <= 6:
             likelihood = 'Medium'
         else:
-            likelihood = 'High'
+            likelihood = 'Low'
             # likelihood = 'Low'
         # results.append({'id': email.get('id', ''), 'Likelihood': likelihood})
         results.append({'id': email.get('sender', ''), 'Likelihood': likelihood})
