@@ -239,6 +239,47 @@ def phishing_score(email):
     if body.isupper():
         points += 1
 
+    # Rule 9: Detecting spam messages (repeated-word scoring)
+    # For each word that appears N times (N >= 3), award (N - 2) points.
+    # Examples: 3 occurrences -> 1 point, 4 -> 2 points, 5 -> 3 points, etc.
+    # - Case-insensitive
+    # - Ignore punctuation by extracting word tokens
+    # - Words shorter than 2 chars are ignored to avoid counting single-letter noise
+    try:
+        words = re.findall(r"\b[\w']{2,}\b", body)
+        if words:
+            from collections import Counter
+            counts = Counter(w.lower() for w in words)
+
+            # Compute points from repeated words: award 1 point per full group
+            # of three occurrences. In other words, points = floor(count / 3).
+            # Examples: count=3 -> 1 point, 4->1 point, 5->1 point, 6->2 points, etc.
+            repeated_points = 0
+            repeated_details = {}
+            for w, c in counts.items():
+                if c >= 3:
+                    pts = c // 3
+                    if pts > 0:
+                        repeated_points += pts
+                        repeated_details[w] = {'count': c, 'points': pts}
+
+            if VERBOSE:
+                print(f"Rule 9 debug: points before Rule 9 = {points}")
+                if repeated_details:
+                    print(f"Rule 9: repeated words detected (details): {repeated_details}")
+                else:
+                    print("Rule 9: no repeated words detected")
+                print(f"Rule 9 debug: points to add = {repeated_points}")
+
+            if repeated_points > 0:
+                points += repeated_points
+                if VERBOSE:
+                    print(f"Rule 9 debug: points after Rule 9 = {points}")
+    except Exception:
+        # If anything goes wrong with tokenization, don't crash - just skip this rule
+        if VERBOSE:
+            print('Rule 9: failed to analyze repeated words')
+
     return points
 
 def email_main():
