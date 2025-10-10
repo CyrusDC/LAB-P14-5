@@ -30,16 +30,17 @@ def check():
         if score <= 10:
             likelihood = 'Low'
             user_email = user_email
-            return render_template("index.html", likelihood=likelihood, score=score, user_email=user_email, user_subject=user_subject, user_message=user_message)
+            return render_template("index.html", likelihood=likelihood, user_email=user_email, user_subject=user_subject, user_message=user_message)
         elif score >= 11 and score <= 69:
             likelihood = 'Medium'
-            return render_template("index.html", likelihood=likelihood, score=score, user_email=user_email, user_subject=user_subject, user_message=user_message)
+            return render_template("index.html", likelihood=likelihood, user_email=user_email, user_subject=user_subject, user_message=user_message)
         else:
             likelihood = 'High'
-            return render_template("index.html", likelihood=likelihood, score=score, user_email=user_email, user_subject=user_subject, user_message=user_message)
+            return render_template("index.html", likelihood=likelihood, user_email=user_email, user_subject=user_subject, user_message=user_message)
     else:
+        likelihood = 'High'
         score = max_score
-        return render_template("index.html", likelihood=likelihood, score=score, user_email=user_email, user_subject=user_subject, user_message=user_message)
+        return render_template("index.html", likelihood=likelihood, user_email=user_email, user_subject=user_subject, user_message=user_message)
 
 
 
