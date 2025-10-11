@@ -39,6 +39,26 @@ while True:
 
 DATASET_PATH = 'dataset/CEAS_08.csv'
 
+# Precompile regexes and normalize keyword/domain lists for performance
+URL_PATTERN = re.compile(r'https?://[^\s]+')
+
+SUSPICIOUS_KEYWORDS = {kw.lower() for kw in [
+    'urgent', 'verify', 'account', 'password', 'login', 'click', 'update', 'security',
+    'win', 'free', 'gift', 'prize', 'limited', 'offer', 'claim', 'alert', 'confirm', 'suspend',
+    'locked', 'unusual', 'activity', 'refund', 'payment', 'invoice', 'bank', 'reset', 'important',
+    'attention', 'immediately', 'action required', 'click here', 'credentials', 'download', 'browser',
+    'edge', 'chrome', 'firefox', '.dll', 'crypt', 'encry', 'key', 'passw', 'username', 'login', 'credential',
+    'load', 'rundll', 'sql', 'select', 'run', '.cmd', 'encode', 'base64', 'powershell', 'mine', 'game',
+    'hack', 'clipboard', 'getasynckeystate', 'mouse', 'hook', 'bypass', 'monitor', 'firewall', 'ransom',
+    'payload', 'hkey', 'vmcheck', 'virus', 'dos', 'task', 'rat', 'ftp', 'smtp', 'socket', 'connect',
+    'send', 'recv', 'autorun', 'startup', 'services.msc', 'svchost', 'regedit', 'regsvr32', 'vmware', 'vbox',
+    'qemu', 'xen', 'sandbox', 'ollydbg', 'windbg', 'ida', 'trojan', 'worm', 'backdoor', 'rootkit', 'keylogger',
+    'stealer', 'exploit', 'shellcode', 'xor', 'base64', 'createremotethread', 'virtualallocex', 'writeprocmemory',
+    'loadlibrary', 'getprocaddress', 'bitcoin', 'monero', 'ethereum', 'wallet', 'miner', 'pool', 'stratum', 'overwrite', 'killprocess'
+]}
+
+SUSPICIOUS_DOMAINS = {d.lower() for d in ['.ru', '.cn', '.tk', '.ml', '.biz', '.info', '.top', '.xyz', '.club', '.online', '.work', '.cf', '.ga', '.gq', '.pw', '.cc', '.su', '.io', '.scam', '.phish']}
+
 
 def init_language_tool(lang='en-US'):
     """Initialize LanguageTool once. Returns tool or None if initialization fails.
@@ -129,38 +149,24 @@ def load_emails(dataset_path):
 
 # function for email checks
 def phishing_score(email):
-    suspicious_keywords = ['urgent', 'verify', 'account', 'password', 'login', 'click', 'update', 'security',
-        'win', 'free', 'gift', 'prize', 'limited', 'offer', 'claim', 'alert', 'confirm', 'suspend',
-        'locked', 'unusual', 'activity', 'refund', 'payment', 'invoice', 'bank', 'reset', 'important',
-        'attention', 'immediately', 'action required', 'click here', 'credentials', 'download', 'Browser',
-        'Edge', 'Chrome', 'Firefox','.dll', 'Crypt', 'Encry', 'Key', 'Passw', 'username', 'Login','Credential',
-        'load', 'Rundll', 'Sql', 'select', 'Run', '.cmd','encode', 'base64', 'Powershell', 'mine', 'game',
-        'hack', 'clipboard', 'GetAsyncKeyState', 'mouse', 'hook', 'bypass', 'monitor', 'Firewall','ransom',
-        'payload', 'HKEY', 'VMcheck', 'Virus', 'DOS', 'task', 'rat','ftp', 'smtp', 'socket', 'connect',
-        'send', 'recv', 'autorun', 'startup','services.msc', 'svchost', 'regedit', 'regsvr32', 'vmware', 'vbox',
-        'qemu','xen', 'sandbox', 'ollydbg', 'windbg', 'ida', 'trojan', 'worm', 'backdoor','rootkit', 'keylogger',
-        'stealer', 'exploit', 'shellcode', 'xor', 'base64','createremotethread', 'virtualallocex', 'writeprocmemory',
-        'loadlibrary','getprocaddress', 'bitcoin', 'monero', 'ethereum', 'wallet', 'miner', 'pool','stratum',
-        'overwrite', 'killprocess', 'winner', 'donation', 'giving', 'jackpot']
-    suspicious_domains = ['.ru', '.cn', '.tk', '.ml', '.biz', '.info', '.top', '.xyz', '.club', '.online', '.work',
-        '.cf', '.ga', '.gq', '.pw', '.cc', '.su', '.io', '.scam', '.phish', '.co', '.za']
+    # Use module-level SUSPICIOUS_KEYWORDS and SUSPICIOUS_DOMAINS for performance
     points = 0
 
     # Rule 1: Add a point for every suspicious keyword detected
-    body = email.get('body', '').lower()
-    for keyword in suspicious_keywords:
+    body_raw = email.get('body', '')
+    body = body_raw.lower()
+    for keyword in SUSPICIOUS_KEYWORDS:
         if keyword in body:
             points += 1
 
     # Rule 2: Check sender domain
     sender = email.get('from', '').lower()
-    if any(sender.endswith(domain) for domain in suspicious_domains):
+    if any(sender.endswith(domain) for domain in SUSPICIOUS_DOMAINS):
         points += 1
 
     # Rule 3: URL analysis
     url_shorteners = ['bit.ly', 'tinyurl.com', 'goo.gl', 't.co', 'ow.ly', 'is.gd', 'buff.ly', 'adf.ly', 'bit.do', 'cutt.ly', 'shorte.st']
-    url_pattern = re.compile(r'https?://[^\s]+')
-    urls = url_pattern.findall(body)
+    urls = URL_PATTERN.findall(body)
     for url in urls:
         # Check for URL shorteners
         if any(short in url for short in url_shorteners):
@@ -237,7 +243,8 @@ def phishing_score(email):
     # Rule 8: Excessive exclamation marks or ALL CAPS
     if body.count('!') > 3:
         points += 1
-    if body.isupper():
+    # Use the raw (original-case) body to detect ALL CAPS
+    if body_raw.isupper():
         points += 1
 
     # Rule 9: Detecting spam messages (repeated-word scoring)
