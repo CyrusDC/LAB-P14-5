@@ -34,9 +34,9 @@ def check():
         score = max_score
 
     # Shows the output of the email whether it is low, mid or high
-    if score <= 15:
+    if score <= 32:
         likelihood = 'Low'
-    elif score >= 16 and score <= 69:
+    elif score >= 33 and score <= 69:
         likelihood = 'Medium'
     else:
         likelihood = 'High'

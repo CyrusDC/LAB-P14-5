@@ -302,9 +302,9 @@ def email_main():
         score = phishing_score(email)
         if score > max_score:
             score = max_score
-        if score >= 67:
+        if score >= 70:
             likelihood = 'High'
-        elif score > 33 and score <= 66:
+        elif score > 33 and score <= 69:
             likelihood = 'Medium'
         else:
             likelihood = 'Low'
