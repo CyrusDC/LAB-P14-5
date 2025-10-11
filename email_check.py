@@ -140,9 +140,10 @@ def phishing_score(email):
         'send', 'recv', 'autorun', 'startup','services.msc', 'svchost', 'regedit', 'regsvr32', 'vmware', 'vbox',
         'qemu','xen', 'sandbox', 'ollydbg', 'windbg', 'ida', 'trojan', 'worm', 'backdoor','rootkit', 'keylogger',
         'stealer', 'exploit', 'shellcode', 'xor', 'base64','createremotethread', 'virtualallocex', 'writeprocmemory',
-        'loadlibrary','getprocaddress', 'bitcoin', 'monero', 'ethereum', 'wallet', 'miner', 'pool','stratum', 'overwrite', 'killprocess']
+        'loadlibrary','getprocaddress', 'bitcoin', 'monero', 'ethereum', 'wallet', 'miner', 'pool','stratum',
+        'overwrite', 'killprocess', 'winner', 'donation', 'giving', 'jackpot']
     suspicious_domains = ['.ru', '.cn', '.tk', '.ml', '.biz', '.info', '.top', '.xyz', '.club', '.online', '.work',
-        '.cf', '.ga', '.gq', '.pw', '.cc', '.su', '.io', '.scam', '.phish']
+        '.cf', '.ga', '.gq', '.pw', '.cc', '.su', '.io', '.scam', '.phish', '.co', '.za']
     points = 0
 
     # Rule 1: Add a point for every suspicious keyword detected
@@ -292,16 +293,14 @@ def email_main():
     for email in emails:
         max_score = 100
         score = phishing_score(email)
-        if score <= max_score:
-            if score >= 66:
-                # likelihood = 'High'
-                likelihood = 'High'
-            elif score > 33 and score <= 66:
-                likelihood = 'Medium'
-            else:
-                likelihood = 'Low'
-                # likelihood = 'Low'
-            # results.append({'id': email.get('id', ''), 'Likelihood': likelihood, 'score': score})
+        if score > max_score:
+            score = max_score
+        if score >= 67:
+            likelihood = 'High'
+        elif score > 33 and score <= 66:
+            likelihood = 'Medium'
+        else:
+            likelihood = 'Low'
         results.append({'id': email.get('sender', ''), 'Likelihood': likelihood, 'score': score})
     #Print summary
     print(f'Total emails: {len(results)}')

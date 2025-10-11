@@ -14,8 +14,6 @@ def index():
 # This part handles the input from the form from index html and updates it when the submit button is pressed
 @app.route('/Email', methods=['POST'])
 def check():
-    likelihood = ""  # Local Var
-
     # Takes input from the form
     user_email = request.form['email_input']
     user_subject = request.form['email_subject']
@@ -27,32 +25,22 @@ def check():
         'body': user_subject + "\n" + user_message
     }
 
-    # Imports the function to check the email and give a score
-    user_check_email = phishing_score(user_dict) 
-    user_check_subject = phishing_score(user_dict)
-    user_check_message = phishing_score(user_dict)
-
     # Adds the total score of the whole email
-    score = user_check_email + user_check_message + user_check_subject
+    score = phishing_score(user_dict)
     max_score = 100
 
+    # Checks if the score is more than the max_score, it will default to 100
+    if score > max_score:
+        score = max_score
+
     # Shows the output of the email whether it is low, mid or high
-    if score < max_score:
-        if score <= 32:
-            likelihood = 'Low'
-            user_email = user_email
-            return render_template("index.html", likelihood=likelihood, user_email=user_email, user_subject=user_subject, user_message=user_message)
-        elif score >= 33 and score <= 66:
-            likelihood = 'Medium'
-            return render_template("index.html", likelihood=likelihood, user_email=user_email, user_subject=user_subject, user_message=user_message)
-        else:
-            likelihood = 'High'
-            return render_template("index.html", likelihood=likelihood, user_email=user_email, user_subject=user_subject, user_message=user_message)
+    if score <= 15:
+        likelihood = 'Low'
+    elif score >= 16 and score <= 69:
+        likelihood = 'Medium'
     else:
         likelihood = 'High'
-        score = max_score
-        return render_template("index.html", likelihood=likelihood, user_email=user_email, user_subject=user_subject, user_message=user_message)
-
+    return render_template("index.html", likelihood=likelihood, user_email=user_email, score=score, user_subject=user_subject, user_message=user_message)
 
 
 
