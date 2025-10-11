@@ -301,14 +301,13 @@ def email_main():
             else:
                 likelihood = 'Low'
                 # likelihood = 'Low'
-            results.append({'id': email.get('id', ''), 'Likelihood': likelihood, 'score': score})
-        # results.append({'id': email.get('sender', ''), 'Likelihood': likelihood, 'score': score})
+            # results.append({'id': email.get('id', ''), 'Likelihood': likelihood, 'score': score})
+        results.append({'id': email.get('sender', ''), 'Likelihood': likelihood, 'score': score})
     #Print summary
     print(f'Total emails: {len(results)}')
     print('Phishing likelihood scores:')
     for r in results:
         print(f"Email ID: {r['id']}, Likelihood: {r['Likelihood']}, score: {r['score']}")
-
 
 
 if __name__ == '__main__':
