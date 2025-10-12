@@ -249,7 +249,7 @@ def phishing_score(email):
 
     # Rule 9: Detecting spam messages (repeated-word scoring)
     # For each word that appears N times (N >= 3), award (N - 2) points.
-    # Examples: 3 occurrences -> 1 point, 4 -> 2 points, 5 -> 3 points, etc.
+    # Examples: Every 3 occurrences -> 1 point, 6 -> +1 points, 9 -> +2 points, etc.
     # - Case-insensitive
     # - Ignore punctuation by extracting word tokens
     # - Words shorter than 2 chars are ignored to avoid counting single-letter noise
