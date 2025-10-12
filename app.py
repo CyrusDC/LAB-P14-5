@@ -21,7 +21,7 @@ def check():
 
     # Takes all the input and place it in a Dictionary so that the function can read the input  
     user_dict = {                                            
-        'from': user_email,
+        'sender': user_email,
         'body': user_subject + "\n" + user_message
     }
 

@@ -43,7 +43,7 @@ DATASET_PATH = 'dataset/CEAS_08.csv'
 URL_PATTERN = re.compile(r'https?://[^\s]+')
 
 SUSPICIOUS_KEYWORDS = {kw.lower() for kw in [
-    'urgent', 'verify', 'account', 'password', 'login', 'click', 'update', 'security',
+    'urgent', 'verify', 'account', 'password', 'login', 'click', 'update', 'security', 'suspended',
     'win', 'free', 'gift', 'prize', 'limited', 'offer', 'claim', 'alert', 'confirm', 'suspend',
     'locked', 'unusual', 'activity', 'refund', 'payment', 'invoice', 'bank', 'reset', 'important',
     'attention', 'immediately', 'action required', 'click here', 'credentials', 'download', 'browser',
@@ -288,6 +288,73 @@ def phishing_score(email):
         if VERBOSE:
             print('Rule 9: failed to analyze repeated words')
 
+    # Rule 10: Check Display Name Impersonation
+    # Rule 10: Check Display Name, Subject, and Email Address Impersonation
+    try:
+        display_name = re.findall(r'"?([^"<]+)"?\s*<', sender)
+        subject = email.get('subject', '').lower()
+        sender_addr = sender
+        if display_name:
+            name = display_name[0].lower()
+            brands = {
+            # --- Financial & Payment Services ---
+            'paypal':        ['paypal.com'],
+            'visa':          ['visa.com'],
+            'mastercard':    ['mastercard.com'],
+            'american express': ['americanexpress.com', 'aexp.com'],
+            'revolut':       ['revolut.com'],
+            'dbs':           ['dbs.com', 'dbs.com.sg'],
+
+            # --- Tech & Cloud Services ---
+            'google':        ['google.com', 'gmail.com'],
+            'microsoft':     ['microsoft.com', 'office.com', 'outlook.com', 'live.com'],
+            'apple':         ['apple.com', 'icloud.com'],
+            'amazon':        ['amazon.com'],
+            'meta':          ['meta.com', 'facebook.com', 'fb.com'],
+            'instagram':     ['instagram.com'],
+            'linkedin':      ['linkedin.com'],
+            'twitter':       ['twitter.com', 'x.com'],
+
+            # --- E-commerce & Delivery ---
+            'ebay':          ['ebay.com'],
+            'shopify':       ['shopify.com'],
+            'alibaba':       ['alibaba.com', 'aliexpress.com'],
+            'dhl':           ['dhl.com'],
+            'fedex':         ['fedex.com'],
+            'ups':           ['ups.com'],
+            'lazada':        ['lazada.com', 'lazada.sg'],
+            'shopee':        ['shopee.com', 'shopee.sg'],
+
+            # --- Government & Public ---
+            'singpass':      ['singpass.gov.sg'],
+            'gov':           ['gov.sg', 'gov.uk', 'gov.com'],
+
+            # --- Other Common Services ---
+            'netflix':       ['netflix.com'],
+            'spotify':       ['spotify.com'],
+            'zoom':          ['zoom.us'],
+            'dropbox':       ['dropbox.com'],
+            'adobe':         ['adobe.com']
+        }
+        for brand, legit_domains in brands.items():
+            # Check display name
+            if brand in name and not any(ld in sender_addr for ld in legit_domains):
+                points += 2
+            # Check subject
+            if brand in subject and not any(ld in sender_addr for ld in legit_domains):
+                points += 2
+            # Check sender email address (before < if present)
+            email_match = re.search(r'<([^>]+)>', sender)
+            email_addr = email_match.group(1).lower() if email_match else sender_addr
+            if brand in email_addr and not any(ld in email_addr for ld in legit_domains):
+                points += 2
+    except Exception:
+        # If anything goes wrong with tokenization, don't crash - just skip this rule
+        if VERBOSE:
+            print('Rule 9: failed to analyze repeated words')           
+
+            
+             
     return points
 
 def email_main():
